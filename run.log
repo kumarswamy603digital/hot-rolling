@@ -1,0 +1,50 @@
+train: (1352, 51), test: (339, 50)
+positive rate in train: 0.0488  (66 / 1352)
+missing-flag columns: ['X8', 'X10', 'X15', 'X16', 'X21', 'X23', 'X24', 'X25', 'X26', 'X27', 'X42', 'X48']
+engineered feature count: 136
+scale_pos_weight = 19.48
+
+Per-model OOF AUC:
+   xgb  AUC = 0.8714
+   lgb  AUC = 0.8729
+   cat  AUC = 0.8745
+   gbm  AUC = 0.8609
+    rf  AUC = 0.8646
+    et  AUC = 0.8641
+    lr  AUC = 0.8723
+
+Stacker meta OOF AUC : 0.8747
+Mean-of-models OOF AUC: 0.8891
+Blended OOF AUC       : 0.8805
+
+Precision-Recall curve at key recall levels (blended OOF):
+  recall>=1.00 -> P=0.0630 R=1.0000 thr=0.0756
+  recall>=0.97 -> P=0.0630 R=1.0000 thr=0.0756
+  recall>=0.95 -> P=0.0939 R=0.9545 thr=0.0952
+  recall>=0.90 -> P=0.1215 R=0.9091 thr=0.1402
+  recall>=0.85 -> P=0.1691 R=0.8636 thr=0.2304
+  recall>=0.80 -> P=0.1886 R=0.8030 thr=0.2808
+  recall>=0.75 -> P=0.1938 R=0.7576 thr=0.3069
+  recall>=0.70 -> P=0.2338 R=0.7121 thr=0.3900
+Best F1: thr=0.5854 P=0.4091 R=0.4091 F1=0.4091
+Best F2: thr=0.3686 P=0.2269 R=0.7424 F2=0.5104
+Best F3: thr=0.2664 P=0.1827 R=0.8333 F3=0.6145
+
+Falling back to F2-optimal: thr=0.3686 P=0.2269 R=0.7424 F2=0.5104
+
+OOF confusion matrix:
+[[1119  167]
+ [  17   49]]
+OOF P=0.2269 R=0.7424 F1=0.3475
+
+Test predicted positives: 44 / 339 (12.98%)
+Train positive rate: 4.88%
+
+Wrote submission: /projects/sandbox/hot-rolling/data/dataset/expected_submission.csv
+   CoilID  Y
+0     711  0
+1    1542  0
+2    1232  0
+3     600  0
+4    1087  0
+Wrote probabilities: /projects/sandbox/hot-rolling/data/dataset/expected_submission_probs.csv
