@@ -1,0 +1,74 @@
+  File "/usr/local/lib/python3.9/site-packages/joblib/externals/loky/backend/context.py", line 255, in _count_physical_cores
+    raise ValueError(f"found {cpu_count_physical} physical cores < 1")
+train: (1352, 51), test: (339, 50)
+engineered features (pre-KNN): 136
+engineered features (with KNN): 145
+
+=== Round 1 (no pseudo-labels) ===
+Per-model OOF AUC:
+   xgb1  AUC = 0.9088
+   xgb2  AUC = 0.9105
+    lgb  AUC = 0.9125
+    cat  AUC = 0.9144
+    gbm  AUC = 0.9051
+     rf  AUC = 0.9208
+     et  AUC = 0.9085
+     lr  AUC = 0.9137
+Stacker OOF AUC: 0.9173
+Mean OOF AUC   : 0.9291
+Final OOF AUC  : 0.9204
+
+Pseudo-label round: adding top 3 test rows as positives
+Their probs: [0.9397 0.9316 0.9155]
+
+=== Round 2 (with pseudo-labels) ===
+Per-model OOF AUC:
+   xgb1  AUC = 0.9150
+   xgb2  AUC = 0.9203
+    lgb  AUC = 0.9159
+    cat  AUC = 0.9255
+    gbm  AUC = 0.8949
+     rf  AUC = 0.9282
+     et  AUC = 0.9115
+     lr  AUC = 0.9167
+Stacker OOF AUC: 0.9190
+Mean OOF AUC   : 0.9332
+Final OOF AUC  : 0.9223
+
+Top 25 by v2 final probability:
+    CoilID  prob_round1  prob_round2  prob_final
+0      654     0.939663     0.986962    1.000000
+1      822     0.931639     0.980897    0.997041
+2      376     0.915528     0.978927    0.994083
+3      532     0.912938     0.915111    0.991124
+4      759     0.900527     0.906466    0.988166
+5      297     0.891156     0.904699    0.985207
+6     1187     0.858879     0.847382    0.980769
+7      958     0.849184     0.862885    0.980769
+8     1184     0.831332     0.839090    0.976331
+9      274     0.823582     0.832880    0.971893
+10     776     0.825221     0.813467    0.968935
+11     275     0.812627     0.825750    0.968935
+12    1494     0.809487     0.823244    0.965976
+13     996     0.782387     0.795543    0.960059
+14     933     0.787069     0.780669    0.960059
+15    1111     0.700141     0.711373    0.955621
+16     902     0.695189     0.698361    0.951183
+17     797     0.644168     0.708636    0.948225
+18    1346     0.690119     0.691016    0.948225
+19     994     0.679443     0.685138    0.945266
+20     246     0.620198     0.619570    0.940828
+21     403     0.597927     0.582781    0.936391
+22     112     0.582631     0.604582    0.934911
+23     239     0.585990     0.563631    0.933432
+24     694     0.548379     0.554102    0.927515
+  top10.csv -> positives = 10
+  top12.csv -> positives = 12
+  top15.csv -> positives = 15
+  top17.csv -> positives = 17
+  top20.csv -> positives = 20
+  top22.csv -> positives = 22
+  top25.csv -> positives = 25
+  top30.csv -> positives = 30
+
+Default expected_submission.csv = top-20
