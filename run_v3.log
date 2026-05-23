@@ -1,0 +1,89 @@
+train: (1352, 51), test: (339, 50)
+engineered features: 136
+  File "/usr/local/lib/python3.9/site-packages/joblib/externals/loky/backend/context.py", line 255, in _count_physical_cores
+    raise ValueError(f"found {cpu_count_physical} physical cores < 1")
+
+[round0] per-model OOF AUC:
+   xgb1  0.9051
+   xgb2  0.9106
+    lgb  0.9043
+    cat  0.9058
+    gbm  0.9140
+     rf  0.9241
+     et  0.9014
+     lr  0.9083
+  mean   0.9272
+
+--- pseudo round 1: adding top-5 test rows as positives (probs [1.    0.997 0.994 0.991 0.988]...)
+
+[round1] per-model OOF AUC:
+   xgb1  0.9193
+   xgb2  0.9207
+    lgb  0.9131
+    cat  0.9180
+    gbm  0.9000
+     rf  0.9265
+     et  0.9133
+     lr  0.9128
+  mean   0.9334
+
+--- pseudo round 2: adding top-12 test rows as positives (probs [1.    0.996 0.996 0.991 0.988]...)
+
+[round2] per-model OOF AUC:
+   xgb1  0.9206
+   xgb2  0.9271
+    lgb  0.9169
+    cat  0.9331
+    gbm  0.8987
+     rf  0.9284
+     et  0.9289
+     lr  0.9342
+  mean   0.9422
+
+Top 30 by v3:
+    CoilID   prob_v3
+0      654  0.998521
+1      822  0.997781
+2      376  0.990385
+3      759  0.989645
+4      532  0.986686
+5      275  0.984467
+6      274  0.983728
+7      297  0.979290
+8     1187  0.977811
+9     1184  0.974112
+10     958  0.972633
+11    1494  0.968195
+12     933  0.963018
+13     996  0.960059
+14     797  0.957840
+15    1111  0.955621
+16     776  0.952663
+17    1346  0.950444
+18     994  0.948964
+19     902  0.943787
+20     112  0.941568
+21     403  0.931953
+22     239  0.930473
+23     246  0.928994
+24     404  0.928994
+25     781  0.928254
+26     694  0.922337
+27      96  0.920858
+28    1498  0.919379
+29     829  0.916420
+  v3_top060.csv -> positives=60
+  v3_top080.csv -> positives=80
+  v3_top100.csv -> positives=100
+  v3_top120.csv -> positives=120
+  v3_top145.csv -> positives=145
+  v3_top160.csv -> positives=160
+  v3_top180.csv -> positives=180
+  v3_top200.csv -> positives=200
+  v3_top220.csv -> positives=220
+  v3_top250.csv -> positives=250
+  v3_top280.csv -> positives=280
+  v3_top300.csv -> positives=300
+
+Default expected_submission.csv = v3_top200
+Safety: expected_submission_ALLPOS.csv (predict everything as 1)
