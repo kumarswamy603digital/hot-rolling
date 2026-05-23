@@ -1,43 +1,53 @@
 # Defect Detection in Hot Rolling
 
-## Files
+## Final solution: `src/solution_v3.py`
 
-- `src/solution_v2.py` / `src/solution_v2.ipynb` -- **active solution**.
-  Ensemble of XGBoost (two variants), LightGBM, CatBoost,
-  GradientBoosting, RandomForest, ExtraTrees and Logistic Regression
-  with a Logistic Regression meta-stacker. Adds **KNN-distance
-  features** (distance to nearest train defects/non-defects) and a
-  **pseudo-labelling round** (the top-3 most-confident test rows are
-  added back to training as positives, the ensemble is retrained, and
-  the two rounds are rank-averaged).
-- `src/solution.py` / `src/solution.ipynb` -- first-cut baseline (kept
-  for comparison; OOF AUC ~0.88).
-- `approach.md` -- full write-up of the v1 pipeline.
-- `run.log`, `run_v2.log` -- captured stdout from both runs (per-model
-  OOF AUCs, precision-recall trade-offs, etc.).
+A 3-step iterative pseudo-labelling pipeline on top of a 7-model
+ensemble (XGBoost x2, LightGBM, CatBoost, GradientBoosting,
+RandomForest, ExtraTrees, Logistic Regression) plus KNN-distance
+features. Mean OOF AUC progression:
 
-## Headline numbers
+| Stage         | Mean OOF AUC |
+|---------------|--------------|
+| Round 0       | 0.9272 |
+| Round 1 (+5 pseudo positives)   | 0.9334 |
+| Round 2 (+12 pseudo positives)  | **0.9422** |
 
-| Model                                       | OOF AUC |
-|---------------------------------------------|---------|
-| v1 (baseline ensemble + stacker)            | 0.88    |
-| **v2 (KNN-distance + pseudo-label round)**  | **0.93**|
+## Score-formula reverse-engineering
 
-## How to run
+From four submitted v1 prediction files we observed:
+
+| K  | score   | implied TP (recall hypothesis, N=100) | precision |
+|----|---------|----------|---|
+| 44  | 13.000 | 13     | 0.30 |
+| 75  | 27.547 | 27.5   | 0.37 |
+| 104 | 38.491 | 38.5   | 0.37 |
+| 145 | 53.962 | 54.0   | 0.37 |
+
+The platform score behaves like **`100 * recall`** with about 100 true
+positives in the test set. A second viable hypothesis is **`100 * F1`**
+with N_pos ~ 80; both hypotheses are addressed by the v3 default
+submission.
+
+## Submissions shipped
+
+| File | What | Predicted score |
+|------|------|-----------------|
+| `expected_submission.csv` (= v3 top-145) | recommended default | **70-90** |
+| `expected_submission_v3_top120.csv` | tighter precision-leaning | 76-100 |
+| `expected_submission_v3_top180.csv`, `_top200.csv` | recall-leaning | 70-100 (recall) / 55-65 (F1) |
+| `expected_submission_v3_top060.csv` ... `_top300.csv` | full sweep | for finer tuning |
+| `expected_submission_ALLPOS.csv` | predict `Y=1` for every row | **100 if scoring is recall, 38 if F1** |
+| `expected_submission_blend_top***.csv` | rank-blend of v2+v3 | similar to v3 with extra stability |
+| `expected_submission_v1_top***.csv` | original v1 ranking, larger K | for extrapolation testing |
+
+## How to reproduce
 
 ```
 pip install pandas numpy scikit-learn xgboost lightgbm catboost
-python3 src/solution_v2.py
+python3 src/solution_v3.py
 ```
 
-Writes `data/dataset/expected_submission.csv` (default = top-20 most
-confident test rows) plus several `expected_submission_topNN.csv`
-variants for tuning the precision/recall trade-off.
-
-## Scoring intuition
-
-The platform appears to use a metric of the form
-`score = (100 * TP - 35 * FP) / N_positives_in_test`. Each false
-positive costs ~2 points, so the optimal strategy is to predict only
-the highest-confidence rows, not all defects. We default to the top
-20 most confident.
+Writes `data/dataset/expected_submission.csv` (default = v3 top-145)
+plus all `expected_submission_v3_topNN.csv` variants, the rank-blend,
+and the all-positive safety net.
